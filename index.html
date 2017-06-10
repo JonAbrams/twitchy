@@ -13,6 +13,17 @@
     <h4>Why not search for some Twitch streams?</h4>
   </div>
 
+  <script type='text/template' class='paging-template'>
+    <div class='total-pagination'>
+      <div class='total-results'>Total results: {total}</div>
+      <div class='pagination'>
+        <button class='page-prev'>&lt;</button>
+        {currentPage} / {totalPages}
+        <button class='page-next'>&gt;</button>
+      </div>
+    </div>
+  </script>
+
   <script type='text/template' class='stream-template'>
     <div class='stream'>
       <img src='{img}'>

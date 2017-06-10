@@ -1,21 +1,34 @@
 (function (window, document) {
   const clientId = 'ko4bfmx40fhecmvvzdxu05buhz5wdf';
   const streamTemplate = document.querySelector('.stream-template').innerText;
+  const pagingTemplate = document.querySelector('.paging-template').innerText;
 
   let scriptEl;
+  let query;
+  let offset;
+  let total;
 
   const searchResultsEl = document.querySelector('.search-results');
-  const noSearchResultsEl = document.querySelector('.no-search-results');
 
-  document.querySelector('.search-form').addEventListener('submit', function(e) {
+  document.querySelector('.search-form').addEventListener('submit', function (e) {
     e.preventDefault();
-    const query = document.querySelector('.search-form__query').value;
+    query = document.querySelector('.search-form__query').value;
     if (!query) return;
-    doSearch(query);
+    offset = 0;
+    doSearch();
   });
 
-  function doSearch(query) {
-    const url = `https://api.twitch.tv/kraken/search/streams?callback=apiCallback&client_id=${clientId}&query=${encodeURIComponent(query)}`;
+  searchResultsEl.addEventListener('click', function (e) {
+    if (e.target.className === 'page-next' && (offset + 10 < total)) {
+      offset += 10;
+    } else if (e.target.className === 'page-prev' && (offset - 10 >= 0)) {
+      offset -= 10;
+    } else return;
+    doSearch();
+  });
+
+  function doSearch() {
+    const url = `https://api.twitch.tv/kraken/search/streams?callback=apiCallback&client_id=${clientId}&query=${encodeURIComponent(query)}&offset=${offset}`;
     scriptEl = document.createElement('script');
     scriptEl.setAttribute('src', url);
     document.body.appendChild(scriptEl);
@@ -32,18 +45,29 @@
     }, str);
   }
 
-  window.apiCallback = function ({ streams }) {
+  window.apiCallback = function (results) {
+    const { streams } = results;
     let html = '';
     scriptEl.remove();
 
-    if (streams.length === 0) {
+    total = results._total;
+
+    if (!streams.length) {
       searchResultsEl.innerHTML = '<h4>No results found</h4>';
     } else {
+      html += render(pagingTemplate, {
+        total: results._total,
+        currentPage: (offset / 10) + 1,
+        totalPages: Math.ceil(results._total / 10)
+      });
       streams.forEach(stream => {
-        stream.img = stream.preview.medium;
-        stream.title = stream.channel.display_name;
-        stream.status = stream.channel.status;
-        html += render(streamTemplate, stream);
+        html += render(streamTemplate, {
+          img: stream.preview.medium,
+          title: stream.channel.display_name,
+          status: stream.channel.status,
+          viewerCount: stream.viewers,
+          game: stream.game,
+        });
       });
       searchResultsEl.innerHTML = html;
     }
