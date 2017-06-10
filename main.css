@@ -1,3 +1,41 @@
-.hide {
-  display: none;
+.container {
+  max-width: 768px;
+  margin: 0 auto;
+  border: solid 1px;
+
+  font-family: helvetica, arial, sans-serif;
+}
+.search-form {
+  padding: 30px 10px;
+}
+
+.search-results {
+  border-top: solid 1px;
+  padding: 20px 10px;
+}
+
+.total-pagination {
+  display: flex;
+  justify-content: space-between;
+}
+.stream {
+  margin-top: 10px;
+  display: flex;
+}
+
+.stream-preview {
+  height: 100px;
+}
+
+.stream-info {
+  margin-left: 10px;
+}
+
+.stream-title {
+  display: block;
+  font-weight: bold;
+  color: black;
+  text-decoration: none;
+  font-size: 18px;
+  margin-bottom: 10px;
 }
