@@ -19,18 +19,20 @@
     <div class='total-pagination'>
       <div class='total-results'>Total results: {total}</div>
       <div class='pagination'>
-        <button class='page-prev'>&lt;</button>
+        <button class='page-prev'>◀</button>
         {currentPage} / {totalPages}
-        <button class='page-next'>&gt;</button>
+        <button class='page-next'>▶</button>
       </div>
     </div>
   </script>
 
   <script type='text/template' class='stream-template'>
     <div class='stream'>
-      <img class='stream-preview' src='{img}'>
+      <a href='{link}'>
+        <img class='stream-preview' src='{img}'>
+      </a>
       <div class='stream-info'>
-        <a href='#' class='stream-title'>{title}</a>
+        <a href='{link}' class='stream-title'>{title}</a>
         <div class='stream-game-viewer-count'>{game} — {viewerCount} viewers</div>
         <div class='stream-status'>{ status }</div>
       </div>

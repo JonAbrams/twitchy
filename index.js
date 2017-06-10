@@ -1,38 +1,44 @@
-(function (window, document) {
+(function (window, document, history) {
   const clientId = 'ko4bfmx40fhecmvvzdxu05buhz5wdf';
   const streamTemplate = document.querySelector('.stream-template').innerText;
   const pagingTemplate = document.querySelector('.paging-template').innerText;
+  const searchResultsEl = document.querySelector('.search-results');
 
+  const hashMatch = location.hash.match(/#q=([^&]*)&page=(\d*)/);
   let scriptEl;
-  let query;
-  let offset;
+  let query = hashMatch && decodeURIComponent(hashMatch[1]);
+  let page = hashMatch && +hashMatch[2];
   let total;
 
-  const searchResultsEl = document.querySelector('.search-results');
+  if (query) doSearch();
 
   document.querySelector('.search-form').addEventListener('submit', function (e) {
     e.preventDefault();
     query = document.querySelector('.search-form__query').value;
     if (!query) return;
-    offset = 0;
+    page = 1;
     doSearch();
   });
 
   searchResultsEl.addEventListener('click', function (e) {
-    if (e.target.className === 'page-next' && (offset + 10 < total)) {
-      offset += 10;
-    } else if (e.target.className === 'page-prev' && (offset - 10 >= 0)) {
-      offset -= 10;
+    if (e.target.className === 'page-next' && (page * 10 <= total)) {
+      page += 1;
+    } else if (e.target.className === 'page-prev' && (page - 1 > 0)) {
+      page -= 1;
     } else return;
+
     doSearch();
   });
 
   function doSearch() {
-    const url = `https://api.twitch.tv/kraken/search/streams?callback=apiCallback&client_id=${clientId}&query=${encodeURIComponent(query)}&offset=${offset}`;
+    const encodedQuery = encodeURIComponent(query);
+    const offset = (page - 1) * 10;
+    const url = `https://api.twitch.tv/kraken/search/streams?callback=apiCallback&client_id=${clientId}&query=${encodedQuery}&offset=${offset}`;
     scriptEl = document.createElement('script');
     scriptEl.setAttribute('src', url);
     document.body.appendChild(scriptEl);
     searchResultsEl.innerHTML = '<h4>Searching…</h4>';
+    history.replaceState(null, null, `#q=${encodedQuery}&page=${page}`);
   }
 
   function render(str, obj) {
@@ -57,7 +63,7 @@
     } else {
       html += render(pagingTemplate, {
         total: results._total,
-        currentPage: (offset / 10) + 1,
+        currentPage: page,
         totalPages: Math.ceil(results._total / 10)
       });
       streams.forEach(stream => {
@@ -67,9 +73,10 @@
           status: stream.channel.status,
           viewerCount: stream.viewers,
           game: stream.game,
+          link: stream.channel.url,
         });
       });
       searchResultsEl.innerHTML = html;
     }
   };
-})(window, document);
+})(window, document, history);

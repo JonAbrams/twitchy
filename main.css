@@ -25,6 +25,7 @@
 
 .stream-preview {
   height: 100px;
+  width: 178px;
 }
 
 .stream-info {
@@ -38,4 +39,12 @@
   text-decoration: none;
   font-size: 18px;
   margin-bottom: 10px;
+}
+
+.page-next, .page-prev {
+  border: none;
+  background-color: white;
+  font-size: 15px;
+  cursor: pointer;
+  outline: none;
 }
