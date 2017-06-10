@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<head>
+  <title>Twitchy - Twitch Stream Search Engine</title>
+  <link href='main.css' rel='stylesheet'>
+</head>
+<body>
+  <form class='search-form'>
+    <input type='search' placeholder='Search query…' class='search-form__query'>
+    <button class='search-form__submit'>Search</button>
+  </form>
+  <div class='search-results'>
+    <h4>Why not search for some Twitch streams?</h4>
+  </div>
+
+  <script type='text/template' class='stream-template'>
+    <div class='stream'>
+      <img src='{img}'>
+      <h3>{title}</h3>
+      <div>{game} — {viewers} viewers</div>
+      <div>{ status }</div>
+    </div>
+  </script>
+
+  <script src='index.js'></script>
+</body>
+</html>

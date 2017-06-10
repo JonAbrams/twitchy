@@ -1,0 +1,15 @@
+{
+  "name": "twitchy",
+  "version": "1.0.0",
+  "description": "A simple front-end app to search Twitch streams",
+  "main": "index.js",
+  "scripts": {
+    "start": "serve",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jon Abrams <jon@jonabrams.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "serve": "^5.2.1"
+  }
+}
